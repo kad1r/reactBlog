@@ -5,6 +5,9 @@ export function addPost(post) {
     return function (dispatch) {
         let userId = firebase.auth().currentUser.uid;
         firebase.database().ref(userId + '/posts').push(post);
+        //TODO: key'i içine gömmek lazım
+        //TODO: last change tutup ona göre postu yenilemek yada listener tanımlamak lazım.
+
         return dispatch({
             type: 'BOOK_SELECTED',
             payload: ''
@@ -20,6 +23,7 @@ export function addTag(tag) {
         })
     }
 }
+
 export function removeTag(tag) {
     return function (dispatch) {
 
@@ -39,10 +43,11 @@ export function increaseTagCount() {
         })
     }
 }
+
 export function loadPostData(userId) {
     return function (dispatch) {
-        firebase.database().ref(userId + '/cateogries').once('value').then((snapshot)=>{
-           let categories = snapshot.val();
+        firebase.database().ref(userId + '/cateogries').once('value').then((snapshot) => {
+            let categories = snapshot.val();
 
             return dispatch({
                 type: POST.LOAD_DATA,
@@ -88,3 +93,25 @@ export function removeCategory(category) {
     }
 }
 
+export function getAllPost(userId) {
+    return function (dispatch) {
+        let posts = [];
+        return firebase.database().ref(userId + '/posts').once('value').then((snapshot) => {
+            posts = snapshot.val();
+            let arrayPosts = [];
+
+            Object.keys(posts).map((key)=> {
+                arrayPosts.push(posts[key]);
+            });
+
+            return dispatch({
+                type: POST.GET_ALL_POST,
+                payload: arrayPosts
+            })
+        }).catch((err) => {
+            throw err;
+        });
+
+
+    }
+}

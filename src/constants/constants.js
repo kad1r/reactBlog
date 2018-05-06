@@ -1,5 +1,6 @@
 export const POST = {
     GET_MORE_POST: 'Get posts',
+    GET_ALL_POST: 'Get all posts',
     LOAD_DATA: 'Load data',
     SELECT_CATEGORY: 'Select category',
     REMOVE_DATA: 'Remove post data',
