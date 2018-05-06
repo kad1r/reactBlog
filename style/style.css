@@ -1,0 +1,19 @@
+.fr-box.fr-basic .fr-element {
+    min-height: 200px !important;
+}
+.tag {
+    padding: 5px 10px 5px 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    background-color: #9babb3;
+    color: #000;
+    float: left;
+    height: 34px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    cursor:pointer;
+}
+.tag:hover {
+    background-color: #b0c2ca;
+}
