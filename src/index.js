@@ -7,8 +7,6 @@ import thunk from 'redux-thunk';
 import Home from './containers/public/Home';
 import reducers from './reducers';
 import BookList from './components/book-list';
-import '../style/bootstrap.css';
-import '../style/style.css';
 import Posts from "./containers/public/Posts";
 import PostDetail from "./containers/public/PostDetail";
 import Admin from "./containers/admin/Admin";
@@ -16,6 +14,7 @@ import * as firebase from 'firebase';
 
 import 'jquery';
 import "../style/bootstrap.css";
+import '../style/style.css';
 import 'bootstrap/dist/js/bootstrap';
 import Login from "./containers/admin/Login";
 

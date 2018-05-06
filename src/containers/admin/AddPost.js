@@ -39,6 +39,7 @@ class AddPost extends Component {
         this.props.loadPostData(this.props.user.uid);
         this.tagInput;
         this.editorInput;
+        this.headerInput;
         this.onAddTagChange = this.onAddTagChange.bind(this);
         this.removeTag = this.removeTag.bind(this);
     }
@@ -72,7 +73,6 @@ class AddPost extends Component {
         if (!this.state.title || !this.state.editorValue || !this.props.post.selectedCategory) {
             return false;
         }
-        console.log('this.props.post.selectedCategory', this.props.post.selectedCategory)
         this.props.addPost({
             title: this.state.title,
             content: this.state.editorValue,
@@ -84,6 +84,7 @@ class AddPost extends Component {
         });
         this.props.removePostData();
         this.tagInput.value = '';
+        this.headerInput.value = '';
         this.setState({editorValue: ''})
 
     }
@@ -128,6 +129,7 @@ class AddPost extends Component {
                     <div className='col-md-8 col-12'>
 
                         <input type="text"
+                               ref={(ref) => this.headerInput = ref}
                                className="form-control mt-2 mb-4"
                                placeholder="Başlık giriniz"
                                onChange={this.onTitleChange}/>
@@ -135,12 +137,7 @@ class AddPost extends Component {
                             config={{
                                 placeholder: "Edit Me",
                                 events: {
-                                    'froalaEditor.focus': function (e, editor) {
-                                        return console.log('asdasd');
-                                    },
-
                                     'froalaEditor.image.beforeUpload':this.uploadImages
-
                                 },
                                 charCounterCount: false
                             }}
@@ -165,8 +162,8 @@ class AddPost extends Component {
                             <div className="input-group mt-2 mb-4">
                                 <select className="custom-select"
                                         id="inputGroupSelect04"
-                                        defaultValue={this.state.blogState}>
-                                    <option selected>Seçim...</option>
+                                        defaultValue>
+                                    <option defaultValue>Seçim...</option>
                                     <option value="1">Yayında</option>
                                     <option value="2">Taslak</option>
                                 </select>
@@ -182,7 +179,7 @@ class AddPost extends Component {
                                     id="inputGroupSelect04"
                                     defaultValue={this.state.blogState}
                                     onChange={this.onCategoryChange}>
-                                <option selected value={undefined}>Kategoriler</option>
+                                <option selected value={undefined} defaultValue>Kategoriler</option>
 
                                 {
                                     this.props.post.categories ?
