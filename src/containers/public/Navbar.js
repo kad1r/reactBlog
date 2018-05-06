@@ -37,7 +37,7 @@ class Navbar extends Component {
                                 <div className="dropdown-menu" aria-labelledby="dropdown07">
 
 
-                                            <Link className="dropdown-item" to="/">Yazılar</Link>
+                                            <Link className="dropdown-item" to="/admin/posts">Yazılar</Link>
                                     <Link className="dropdown-item" to="/admin/addpost">Yazı Ekle</Link>
                                             <Link className="dropdown-item" to="/admin/categories">Kategori Ekle</Link>
                                     <Link className="dropdown-item" onClick={()=>this.props.logout()} to="/">Çıkış Yap</Link>

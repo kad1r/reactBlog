@@ -5,7 +5,8 @@ const initialState = {
     tags: [],
     counter: 0,
     categories: {},
-    selectedCategory:''
+    selectedCategory: '',
+    posts: []
 };
 
 export default function (state = initialState, action) {
@@ -15,9 +16,13 @@ export default function (state = initialState, action) {
             return update(state, {tags: {$push: [newValue]}});
         }
         case POST.TAG.REMOVE: {
-            return update(state, {tags: {$apply: (val)=>{
+            return update(state, {
+                tags: {
+                    $apply: (val) => {
                         return val.filter((v) => v.id !== action.payload.id)
-                    }}});
+                    }
+                }
+            });
         }
         case POST.TAG.INCREASE:
             return update(state, {counter: {$set: (state.counter || 0) + 1}});
@@ -27,14 +32,14 @@ export default function (state = initialState, action) {
             return update(state, {selectedCategory: {$set: action.payload}});
         case POST.REMOVE_DATA: {
             return update(state,
-                {tags:{$set:[]}},
-                {counter:{$set:0}},
-                {categories:{$set:{}}},
-                {selectedCategory:{$set:''}}
-                )
+                {tags: {$set: []}},
+                {counter: {$set: 0}},
+                {categories: {$set: {}}},
+                {selectedCategory: {$set: ''}}
+            )
         }
         case POST.ADD_CATEGORY:
-            return update(state, {$set: action.payload});
+            return update(state, {category:{$set: action.payload}});
         case POST.REMOVE_CATEGORY:
             return update(state, {
                 tags: {
@@ -43,6 +48,8 @@ export default function (state = initialState, action) {
                     }
                 }
             });
+        case POST.GET_ALL_POST:
+            return update(state, {posts: {$set: action.payload}});
         default:
             return state;
     }

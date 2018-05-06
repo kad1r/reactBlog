@@ -193,7 +193,6 @@ class AddPost extends Component {
                         </form>
                     </div>
                 </div>
-
             </div>
         );
     }

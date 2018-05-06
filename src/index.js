@@ -8,6 +8,7 @@ import Home from './containers/public/Home';
 import reducers from './reducers';
 import BookList from './components/book-list';
 import Posts from "./containers/public/Posts";
+import AdminPosts from "./containers/admin/Posts";
 import PostDetail from "./containers/public/PostDetail";
 import Admin from "./containers/admin/Admin";
 import * as firebase from 'firebase';
@@ -59,6 +60,7 @@ ReactDOM.render(
                 <Route exact path="/admin" component={Admin}/>
                 <Route exact path="/admin/settings" component={Admin}/>
                 <Route exact path="/admin/addpost" component={AddPost}/>
+                <Route exact path="/admin/posts" component={AdminPosts}/>
                 <Route exact path="/admin/dashboard" component={Dashboard}/>
                 <Route exact path="/admin/categories" component={Categories}/>
                 <Route exact path="/login" component={Login}/>
