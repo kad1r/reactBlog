@@ -60,6 +60,7 @@ ReactDOM.render(
                 <Route exact path="/admin" component={Admin}/>
                 <Route exact path="/admin/settings" component={Admin}/>
                 <Route exact path="/admin/addpost" component={AddPost}/>
+                <Route exact path="/admin/editpost/:slug" component={AddPost}/>
                 <Route exact path="/admin/posts" component={AdminPosts}/>
                 <Route exact path="/admin/dashboard" component={Dashboard}/>
                 <Route exact path="/admin/categories" component={Categories}/>

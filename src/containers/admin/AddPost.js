@@ -19,6 +19,7 @@ import moment from 'moment';
 import {generateSlug} from "../../utils/utils";
 import Navbar from "../public/Navbar";
 import {uploadImage} from "../../firebase/firebase";
+import {POST} from "../../constants/constants";
 
 class AddPost extends Component {
     constructor(props) {
@@ -40,8 +41,16 @@ class AddPost extends Component {
         this.tagInput;
         this.editorInput;
         this.headerInput;
+        this.mode = POST.MODE.ADD_POST;
         this.onAddTagChange = this.onAddTagChange.bind(this);
         this.removeTag = this.removeTag.bind(this);
+        if(this.props.match.params.slug){
+            this.mode = POST.MODE.EDIT_POST;
+        }
+    }
+
+    editPostInitialValues() {
+        
     }
 
     onLogout() {
@@ -118,6 +127,8 @@ class AddPost extends Component {
     }
 
     render() {
+
+        console.log('this.mode',this.mode);
         if (!this.props.user) {
             this.props.history.push('/404');
             return false;
@@ -170,8 +181,8 @@ class AddPost extends Component {
                                 <div className="input-group-append">
                                     <button className="btn btn-success"
                                             type="submit">
-                                        Kaydet
-                                    </button>
+                                        {this.mode = POST.MODE.EDIT_POST ? 'Güncelle' : 'Kaydet'}
+                                            </button>
                                 </div>
                             </div>
 

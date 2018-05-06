@@ -14,8 +14,11 @@ export const POST = {
     STATE: {
         PUBLISH: 'Publish',
         DRAFT: 'Draft'
+    },
+    MODE:{
+        ADD_POST:'Mode Add Post',
+        EDIT_POST:'Mode Edit Post'
     }
-
 };
 export const USER = {
     LOGIN: 'User login',

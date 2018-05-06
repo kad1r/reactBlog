@@ -28,7 +28,7 @@ class Posts extends Component {
         },{
             Header: '',
             id: "slug",
-            accessor: d => <div><Link to={'/admin/posts/' + d.slug}>Düzenle</Link></div>
+            accessor: d => <div><Link to={'/admin/editPost/' + d.slug}>Düzenle</Link></div>
         }]
     }
 
