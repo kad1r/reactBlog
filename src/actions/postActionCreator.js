@@ -46,13 +46,23 @@ export function increaseTagCount() {
 
 export function loadPostData(userId) {
     return function (dispatch) {
-        firebase.database().ref(userId + '/cateogries').once('value').then((snapshot) => {
-            let categories = snapshot.val();
+        firebase.database().ref(userId + '/categories/').on("value", function (snapshot) {
+            let arrayCategories = [];
+
+            if(snapshot.val()){
+                let categories = snapshot.val();
+
+                Object.keys(categories).map((key)=> {
+                    console.log(key)
+                    arrayCategories.push(key);
+                });
+            }
 
             return dispatch({
                 type: POST.LOAD_DATA,
-                payload: categories
+                payload: arrayCategories
             })
+
         });
     }
 }
@@ -75,8 +85,10 @@ export function removePostData() {
     }
 }
 
-export function addCategory(category) {
+export function addCategory(category,userId) {
     return function (dispatch) {
+
+        firebase.database().ref(userId + '/categories/').update({[category]:true});
         return dispatch({
             type: POST.ADD_CATEGORY,
             payload: category
@@ -84,8 +96,9 @@ export function addCategory(category) {
     }
 }
 
-export function removeCategory(category) {
+export function removeCategory(category,userId) {
     return function (dispatch) {
+        firebase.database().ref(userId + '/categories/').update({[category]:null});
         return dispatch({
             type: POST.REMOVE_CATEGORY,
             payload: category

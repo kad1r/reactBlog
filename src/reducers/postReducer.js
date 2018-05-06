@@ -44,6 +44,7 @@ export default function (state = initialState, action) {
             return update(state, {
                 tags: {
                     $apply: (val) => {
+                        console.log('val',val);
                         return val.filter((v) => v !== action.payload)
                     }
                 }
