@@ -46,7 +46,8 @@ class AddPost extends Component {
 
     componentDidMount() {
             console.log("this.props.match.params",);
-        if(this.props.match.params !== {} && this.props.match.params.slug){
+            console.log("this.props.match.params !== {}",this.props.match.params !== {},this.props.match.params.slug);
+        if(this.props.match.params !== {} && this.props.match.params.slug !== undefined){
             this.props.selectPostMode(POST.MODE.EDIT_POST)
         }
         if(this.props.post.mode = POST.MODE.EDIT_POST){
