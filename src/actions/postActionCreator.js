@@ -4,8 +4,11 @@ import {POST} from "../constants/constants";
 export function addPost(post) {
     return function (dispatch) {
         let userId = firebase.auth().currentUser.uid;
-        firebase.database().ref(userId + '/posts').push(post);
-        //TODO: key'i içine gömmek lazım
+
+        let postKey = firebase.database().ref(userId + '/posts').push().key;
+        post["key"] = postKey;
+        firebase.database().ref(userId + '/posts/' + postKey).update(post);
+
         //TODO: last change tutup ona göre postu yenilemek yada listener tanımlamak lazım.
 
         return dispatch({
@@ -76,6 +79,33 @@ export function selectCategory(category) {
     }
 }
 
+export function setPostTitle(title) {
+    return function (dispatch) {
+        return dispatch({
+            type: POST.SET_TITLE,
+            payload: title
+        })
+    }
+}
+
+export function setPostState(state) {
+    return function (dispatch) {
+        return dispatch({
+            type: POST.SET_STATE,
+            payload: state
+        })
+    }
+}
+
+export function setPostContent(content) {
+    return function (dispatch) {
+        return dispatch({
+            type: POST.SET_CONTENT,
+            payload: content
+        })
+    }
+}
+
 export function removePostData() {
     return function (dispatch) {
         return dispatch({
@@ -105,6 +135,34 @@ export function removeCategory(category,userId) {
         })
     }
 }
+export function selectPostMode(mode) {
+    return function (dispatch) {
+        return dispatch({
+            type: POST.SELECTED_MODE,
+            payload: mode
+        })
+    }
+}
+
+
+export function getPost(postId,userId) {
+    return function (dispatch) {
+        let post = null;
+        return firebase.database().ref(userId + '/posts' + postId).once('value').then((snapshot) => {
+            post = snapshot.val();
+
+            return dispatch({
+                type: POST.GET_POST,
+                payload: post
+            })
+        }).catch((err) => {
+            throw err;
+        });
+
+
+    }
+}
+
 
 export function getAllPost(userId) {
     return function (dispatch) {

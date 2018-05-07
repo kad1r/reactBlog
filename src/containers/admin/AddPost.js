@@ -6,14 +6,13 @@ import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {login, logout} from "../../actions/userActionCreator";
 import {
     addPost,
     addTag,
     increaseTagCount,
     loadPostData, removePostData,
     removeTag,
-    selectCategory
+    selectCategory, selectPostMode, setPostContent, setPostState, setPostTitle
 } from "../../actions/postActionCreator";
 import moment from 'moment';
 import {generateSlug} from "../../utils/utils";
@@ -26,50 +25,71 @@ class AddPost extends Component {
         super(props);
         this.state = {
             blogPost: 'test',
-            editorValue: ''
+            editorValue: '',
+            mode:POST.MODE.ADD_POST
         };
 
-        this.onLogout = this.onLogout.bind(this);
-        this.handleModelChange = this.handleModelChange.bind(this);
         this.handleModelChange = this.handleModelChange.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
-        this.handleModelChange = this.handleModelChange.bind(this);
         this.onPostSubmit = this.onPostSubmit.bind(this);
         this.uploadImages = this.uploadImages.bind(this);
         this.onCategoryChange = this.onCategoryChange.bind(this);
+        this.onPostStateChange = this.onPostStateChange.bind(this);
         this.props.loadPostData(this.props.user.uid);
         this.tagInput;
         this.editorInput;
         this.headerInput;
-        this.mode = POST.MODE.ADD_POST;
         this.onAddTagChange = this.onAddTagChange.bind(this);
         this.removeTag = this.removeTag.bind(this);
-        if(this.props.match.params.slug){
-            this.mode = POST.MODE.EDIT_POST;
+
+    }
+
+    componentDidMount() {
+            console.log("this.props.match.params",);
+        if(this.props.match.params !== {} && this.props.match.params.slug){
+            this.props.selectPostMode(POST.MODE.EDIT_POST)
         }
+        if(this.props.post.mode = POST.MODE.EDIT_POST){
+            this.props.setPostTitle(this.state.title);
+            this.props.setPostContent("");
+            this.props.setPostState("");
+
+        }else {
+            this.headerInput.value = this.props.post.title;
+
+        }
+
+        this.editPostInitialValues();
     }
 
     editPostInitialValues() {
-        
-    }
-
-    onLogout() {
-        this.props.logout();
-        this.props.history.push('/admin');
+        this.setState({editorValue: ''})
     }
 
     onTitleChange(e) {
         this.setState({title: e.target.value});
+        clearTimeout(this.setTitleTimeout)
+        this.setTitleTimeout = setTimeout((e) => {
+            this.props.setPostTitle(this.state.title);
+        }, 1000);
     }
 
-    handleModelChange(e) {
-        this.setState({editorValue: e});
+    handleModelChange() {
+        clearTimeout(this.setContentTimeout);
+
+        this.setContentTimeout = setTimeout((e) => {
+            this.props.setPostContent(this.editorInput.$element["0"].value);
+        }, 1000);
     }
 
-    uploadImages(e, editor, images){
+    onPostStateChange(e){
+        this.props.setPostState(e.target.value);
+    }
+
+    uploadImages(e, editor, images) {
         console.log(images[0])
 
-       uploadImage(images[0]).then((image)=> {
+        uploadImage(images[0]).then((image) => {
             editor.image.insert(image);
 
         });
@@ -83,11 +103,11 @@ class AddPost extends Component {
             return false;
         }
         this.props.addPost({
-            title: this.state.title,
-            content: this.state.editorValue,
+            title: this.props.post.title,
+            content: this.props.post.content,
             timestamp: moment().unix(),
             tags: this.props.post.tags,
-            slug: generateSlug(this.state.title),
+            slug: generateSlug(this.props.post.title),
             category: this.props.post.selectedCategory,
             state: 1
         });
@@ -127,8 +147,7 @@ class AddPost extends Component {
     }
 
     render() {
-
-        console.log('this.mode',this.mode);
+        console.log(this)
         if (!this.props.user) {
             this.props.history.push('/404');
             return false;
@@ -143,18 +162,19 @@ class AddPost extends Component {
                                ref={(ref) => this.headerInput = ref}
                                className="form-control mt-2 mb-4"
                                placeholder="Başlık giriniz"
+                               value={this.state.title}
                                onChange={this.onTitleChange}/>
                         <FroalaEditor
                             config={{
                                 placeholder: "Edit Me",
                                 events: {
-                                    'froalaEditor.image.beforeUpload':this.uploadImages
+                                    'froalaEditor.image.beforeUpload': this.uploadImages,
+                                    'froalaEditor.contentChanged':this.handleModelChange
                                 },
                                 charCounterCount: false
                             }}
-                            model={this.state.editorValue}
+                            model={this.props.post.content}
                             ref={(ref) => this.editorInput = ref}
-                            onModelChange={this.handleModelChange}
                             tag='textarea'/>
                         <div className='mt-2 mb-2'>
                             <input ref={(ref) => this.tagInput = ref}
@@ -173,29 +193,33 @@ class AddPost extends Component {
                             <div className="input-group mt-2 mb-4">
                                 <select className="custom-select"
                                         id="inputGroupSelect04"
-                                        defaultValue>
-                                    <option defaultValue>Seçim...</option>
+                                        defaultValue={this.props.post.state}
+                                        onChange={this.onPostStateChange}>
                                     <option value="1">Yayında</option>
                                     <option value="2">Taslak</option>
                                 </select>
                                 <div className="input-group-append">
                                     <button className="btn btn-success"
                                             type="submit">
-                                        {this.mode = POST.MODE.EDIT_POST ? 'Güncelle' : 'Kaydet'}
-                                            </button>
+                                        {this.props.post.mode = POST.MODE.ADD_POST ? 'Kaydet' : 'Güncelle'}
+                                    </button>
                                 </div>
                             </div>
 
                             <select className="custom-select"
                                     id="inputGroupSelect04"
-                                    defaultValue={this.state.blogState}
+                                    defaultValue={this.props.post.selectedCategorye}
                                     onChange={this.onCategoryChange}>
-                                <option selected value={undefined} defaultValue>Kategoriler</option>
+                                <option value={undefined} defaultValue>Kategoriler</option>
 
                                 {
                                     this.props.post.categories ?
-                                        Object.keys(this.props.post.categories).map((category) => {
-                                            return <option key={category} value={category}>{category}</option>
+                                        this.props.post.categories.map((category) => {
+                                            return <option selected={this.props.post.selectedCategory === category ? true : false}
+                                                           key={category}
+                                                           value={category}>
+                                                {category}
+                                                </option>
                                         }) : null
 
                                 }
@@ -219,15 +243,17 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        login: login,
-        logout: logout,
-        addPost: addPost,
-        loadPostData: loadPostData,
-        selectCategory: selectCategory,
-        removeTag: removeTag,
-        increaseTagCount: increaseTagCount,
+        addPost,
+        loadPostData,
+        selectCategory,
+        removeTag,
+        increaseTagCount,
+        setPostTitle,
         addTag,
         removePostData,
+        setPostContent,
+        setPostState,
+        selectPostMode
     }, dispatch)
 }
 

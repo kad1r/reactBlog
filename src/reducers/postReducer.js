@@ -6,7 +6,10 @@ const initialState = {
     counter: 0,
     categories: {},
     selectedCategory: '',
-    posts: []
+    posts: [],
+    title: '',
+    state: 0,
+    content: ''
 };
 
 export default function (state = initialState, action) {
@@ -39,18 +42,29 @@ export default function (state = initialState, action) {
             )
         }
         case POST.ADD_CATEGORY:
-            return update(state, {category:{$set: action.payload}});
+            return update(state, {category: {$set: action.payload}});
         case POST.REMOVE_CATEGORY:
             return update(state, {
                 tags: {
                     $apply: (val) => {
-                        console.log('val',val);
+                        console.log('val', val);
                         return val.filter((v) => v !== action.payload)
                     }
                 }
             });
         case POST.GET_ALL_POST:
             return update(state, {posts: {$set: action.payload}});
+        case POST.SET_TITLE:
+            return update(state, {title: {$set: action.payload}});
+        case POST.SET_STATE:
+            return update(state, {state: {$set: action.payload}});
+        case POST.SET_CONTENT:
+            return update(state, {content: {$set: action.payload}});
+        case POST.SELECTED_MODE:
+            return update(state, {mode: {$set: action.payload}});
+        case POST.GET_POST:
+            return state;
+        // return update(state, {content: {$set: action.payload}});
         default:
             return state;
     }

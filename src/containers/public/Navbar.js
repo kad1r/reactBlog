@@ -31,11 +31,10 @@ class Navbar extends Component {
                             </li>
                             {
                                 this.props.user ?
-                            <li className="nav-item dropdown" onTouchStart={()=>alert('asd')}>
+                            <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="http://example.com" id="dropdown07"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">User</a>
                                 <div className="dropdown-menu" aria-labelledby="dropdown07">
-
 
                                             <Link className="dropdown-item" to="/admin/posts">Yazılar</Link>
                                     <Link className="dropdown-item" to="/admin/addpost">Yazı Ekle</Link>
