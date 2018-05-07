@@ -38,7 +38,10 @@ export default function (state = initialState, action) {
                 {tags: {$set: []}},
                 {counter: {$set: 0}},
                 {categories: {$set: {}}},
-                {selectedCategory: {$set: ''}}
+                {selectedCategory: {$set: ''}},
+                {title: ''},
+                {state: 1},
+                {content: ''}
             )
         }
         case POST.ADD_CATEGORY:

@@ -12,18 +12,18 @@ import AdminPosts from "./containers/admin/Posts";
 import PostDetail from "./containers/public/PostDetail";
 import Admin from "./containers/admin/Admin";
 import * as firebase from 'firebase';
+import Login from "./containers/admin/Login";
+import Categories from "./containers/admin/Categories";
+import AddPost from "./containers/admin/AddPost";
+import Dashboard from "./containers/admin/Dashboard";
+import EditPost from "./containers/admin/EditPost";
+import {loadState, saveState} from "./localStorage";
 
 import 'jquery';
 import "../style/bootstrap.css";
 import '../style/style.css';
 import 'bootstrap/dist/js/bootstrap';
-import Login from "./containers/admin/Login";
 
-import {loadState, saveState} from "./localStorage";
-import Categories from "./containers/admin/Categories";
-import AddPost from "./containers/admin/AddPost";
-import Dashboard from "./containers/admin/Dashboard";
-import {POST} from "./constants/constants";
 
 const Page404 = () => {
     return <h1>hata</h1>
@@ -60,7 +60,7 @@ ReactDOM.render(
                 <Route exact path="/admin" component={Admin}/>
                 <Route exact path="/admin/settings" component={Admin}/>
                 <Route exact path="/admin/addpost" component={AddPost}/>
-                <Route exact path="/admin/editpost/:slug" component={AddPost}/>
+                <Route exact path="/admin/editpost/:slug" component={EditPost}/>
                 <Route exact path="/admin/posts" component={AdminPosts}/>
                 <Route exact path="/admin/dashboard" component={Dashboard}/>
                 <Route exact path="/admin/categories" component={Categories}/>

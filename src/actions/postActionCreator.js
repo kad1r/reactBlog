@@ -18,6 +18,18 @@ export function addPost(post) {
     }
 }
 
+export function updatePost(post) {
+    return function (dispatch) {
+        let userId = firebase.auth().currentUser.uid;
+        console.log(post)
+        firebase.database().ref(userId + '/posts/'+post.key).update(post);
+
+        return dispatch({
+            type: 'BOOK_SELECTED',
+            payload: ''
+        })
+    }
+}
 export function addTag(tag) {
     return function (dispatch) {
         return dispatch({
@@ -29,7 +41,7 @@ export function addTag(tag) {
 
 export function removeTag(tag) {
     return function (dispatch) {
-
+        console.log('remove tag')
         return dispatch({
             type: POST.TAG.REMOVE,
             payload: tag
