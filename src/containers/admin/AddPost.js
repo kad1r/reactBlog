@@ -19,14 +19,18 @@ import {generateSlug} from "../../utils/utils";
 import Navbar from "../public/Navbar";
 import {uploadImage} from "../../firebase/firebase";
 import {POST} from "../../constants/constants";
+import update from "react-addons-update";
 
 class AddPost extends Component {
     constructor(props) {
         super(props);
         this.state = {
             blogPost: 'test',
-            content: 'asdasdasd',
-            mode:POST.MODE.ADD_POST
+            content: '',
+            title: '',
+            tags: [],
+            category: '',
+            state: 1
         };
 
         this.handleModelChange = this.handleModelChange.bind(this);
@@ -43,35 +47,16 @@ class AddPost extends Component {
 
     }
 
-    componentDidMount() {
-        this.setState({title:this.props.post.title});
-        this.setState({content:this.props.post.content});
-
-        this.editPostInitialValues();
-    }
-
-    editPostInitialValues() {
-        this.setState({content: ''})
-    }
-
     onTitleChange(e) {
         this.setState({title: e.target.value});
-        clearTimeout(this.setTitleTimeout)
-        this.setTitleTimeout = setTimeout((e) => {
-            this.props.setPostTitle(this.state.title);
-        }, 1000);
     }
 
     handleModelChange(content) {
-        clearTimeout(this.setContentTimeout)
-        this.setContentTimeout = setTimeout(() => {
-            this.props.setPostContent(content);
-        }, 1000);
-
+        this.setState({content:content});
     }
 
-    onPostStateChange(e){
-        this.props.setPostState(e.target.value);
+    onPostStateChange(e) {
+        this.setState({state:e.target.value});
     }
 
     uploadImages(e, editor, images) {
@@ -89,58 +74,56 @@ class AddPost extends Component {
             return false;
         }
         this.props.addPost({
-            title: this.props.post.title,
-            content: this.props.post.content,
+            title: this.state.title,
+            content: this.state.content,
             timestamp: moment().unix(),
-            tags: this.props.post.tags,
-            slug: generateSlug(this.props.post.title),
-            category: this.props.post.selectedCategory,
+            tags: this.state.tags,
+            slug: generateSlug(this.state.title),
+            category: this.state.category,
             state: 1
         });
         this.props.removePostData();
         this.tagInput.value = '';
         this.headerInput.value = '';
         this.setState({content: ''})
-
     }
 
     onCategoryChange(e) {
-        this.props.selectCategory(e.target.value);
+        this.setState({category:e.target.value});
     }
 
     getTags() {
-        return this.props.post.tags.map((tag) => <div className='tag'
+        return this.state.tags.map((tag) => <div className='tag'
                                                       key={tag.id}
                                                       tagName={tag.name}
-                                                      onClick={this.removeTag.bind(this,tag)}>{tag.name + ' x'}</div>)
+                                                      onClick={this.removeTag.bind(this, tag)}>{tag.name + ' x'}</div>)
     }
 
     removeTag(removeTag) {
-        console.log('testtt',removeTag);
-        this.props.removeTag(removeTag);
-
-    }
-
-    getPostMode(){
-        return this.props.post.mode === POST.MODE.ADD_POST ? 'Kaydet' : 'Güncelle';
+      let oldState = this.state.tags;
+        let index = oldState.indexOf(removeTag);
+        if (index !== -1) oldState.splice(index, 1);
+        this.setState({tags:oldState})
     }
 
     onAddTagChange(event) {
         let value = event.target.value;
         if (value[value.length - 1] === ',') {
-            this.props.increaseTagCount();
             let trimmedValue = value.split(',')[0];
+            this.props.increaseTagCount();
             let newValue = {
                 name: trimmedValue,
                 id: this.props.post.counter
             };
-            this.props.addTag(newValue);
+            console.log(newValue)
+            let oldState = this.state.tags;
+            oldState.push(newValue);
+            this.setState({tags:oldState})
             this.tagInput.value = '';
         }
     }
 
     render() {
-        console.log('this.state',this.state)
         if (!this.props.user) {
             this.props.history.push('/404');
             return false;
@@ -161,8 +144,8 @@ class AddPost extends Component {
                             config={{
                                 events: {
                                     'froalaEditor.image.beforeUpload': this.uploadImages,
-                                    'froalaEditor.contentChanged':this.handleModelChange,
-                            }
+                                    'froalaEditor.contentChanged': this.handleModelChange,
+                                }
                             }}
                             model={this.state.content}
                             onModelChange={this.handleModelChange}
@@ -180,7 +163,6 @@ class AddPost extends Component {
                     </div>
 
                     <div className='col-md-4 col-12'>
-
                         <form onSubmit={this.onPostSubmit}>
                             <div className="input-group mt-2 mb-4">
                                 <select className="custom-select"
@@ -193,29 +175,25 @@ class AddPost extends Component {
                                 <div className="input-group-append">
                                     <button className="btn btn-success"
                                             type="submit">
-                                        {this.getPostMode()}
+                                        Paylaş
                                     </button>
                                 </div>
                             </div>
-
                             <select className="custom-select"
                                     id="inputGroupSelect04"
-                                    defaultValue={this.props.post.selectedCategorye}
                                     onChange={this.onCategoryChange}>
                                 <option value={undefined} defaultValue>Kategoriler</option>
-
                                 {
-                                    this.props.post.categories ?
+                                    this.props.post.categories && this.props.post.categories.length > 0 ?
                                         this.props.post.categories.map((category) => {
-                                            return <option selected={this.props.post.selectedCategory === category ? true : false}
-                                                           key={category}
-                                                           value={category}>
+                                            return <option
+                                                selected={this.props.post.selectedCategory === category ? true : false}
+                                                key={category}
+                                                value={category}>
                                                 {category}
-                                                </option>
+                                            </option>
                                         }) : null
-
                                 }
-
                             </select>
                         </form>
                     </div>
@@ -250,3 +228,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPost);
+
+

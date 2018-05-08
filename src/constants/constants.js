@@ -10,6 +10,7 @@ export const POST = {
     SET_TITLE:'Set post title',
     SET_CONTENT:'Set post content',
     SET_STATE:'Set post state',
+    SET_OLD_POST:'Set old post',
     SELECTED_MODE:'Post selected mode',
     TAG: {
         ADD: 'Add tag',

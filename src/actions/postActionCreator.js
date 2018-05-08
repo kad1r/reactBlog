@@ -1,6 +1,15 @@
 import * as firebase from 'firebase';
 import {POST} from "../constants/constants";
 
+export function selectPostMode(mode) {
+    return function (dispatch) {
+        return dispatch({
+            type: POST.SELECTED_MODE,
+            payload: mode
+        })
+    }
+}
+
 export function addPost(post) {
     return function (dispatch) {
         let userId = firebase.auth().currentUser.uid;
@@ -30,6 +39,16 @@ export function updatePost(post) {
         })
     }
 }
+
+export function setEditPost(post) {
+    return function (dispatch) {
+        return dispatch({
+            type: POST.SET_OLD_POST,
+            payload: post
+        })
+    }
+}
+
 export function addTag(tag) {
     return function (dispatch) {
         return dispatch({
@@ -59,6 +78,8 @@ export function increaseTagCount() {
     }
 }
 
+//CATEGORY DATA
+//TODO: isim değişmeli
 export function loadPostData(userId) {
     return function (dispatch) {
         firebase.database().ref(userId + '/categories/').on("value", function (snapshot) {
@@ -85,7 +106,7 @@ export function loadPostData(userId) {
 export function selectCategory(category) {
     return function (dispatch) {
         return dispatch({
-            type: POST.SELECT_CATEGORY,
+            type: POST.SET_OLD_POST,
             payload: category
         })
     }
@@ -129,7 +150,6 @@ export function removePostData() {
 
 export function addCategory(category,userId) {
     return function (dispatch) {
-
         firebase.database().ref(userId + '/categories/').update({[category]:true});
         return dispatch({
             type: POST.ADD_CATEGORY,
@@ -147,15 +167,6 @@ export function removeCategory(category,userId) {
         })
     }
 }
-export function selectPostMode(mode) {
-    return function (dispatch) {
-        return dispatch({
-            type: POST.SELECTED_MODE,
-            payload: mode
-        })
-    }
-}
-
 
 export function getPost(postId,userId) {
     return function (dispatch) {
@@ -170,11 +181,8 @@ export function getPost(postId,userId) {
         }).catch((err) => {
             throw err;
         });
-
-
     }
 }
-
 
 export function getAllPost(userId) {
     return function (dispatch) {

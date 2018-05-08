@@ -9,7 +9,8 @@ const initialState = {
     posts: [],
     title: '',
     state: 0,
-    content: ''
+    content: '',
+    editPost:{}
 };
 
 export default function (state = initialState, action) {
@@ -65,9 +66,16 @@ export default function (state = initialState, action) {
             return update(state, {content: {$set: action.payload}});
         case POST.SELECTED_MODE:
             return update(state, {mode: {$set: action.payload}});
-        case POST.GET_POST:
-            return state;
-        // return update(state, {content: {$set: action.payload}});
+        case POST.SET_OLD_POST:
+            return update(state,
+                {tags: {$set: action.payload.tags}},
+                {counter: {$set: 0}},
+                {selectedCategory: {$set: action.payload.category}},
+                {title: {$set: action.payload.title}},
+                {state: {$set: action.payload.state}},
+                {content: {$set: action.payload.content}},
+                {key: {$set: action.payload.key}},
+            );
         default:
             return state;
     }
