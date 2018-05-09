@@ -12,7 +12,7 @@ import {
     increaseTagCount,
     loadPostData, removePostData,
     removeTag,
-    selectCategory, selectPostMode, setPostContent, setPostState, setPostTitle
+    selectCategory, selectPostMode, setPostContent, setPostState, setPostTitle, updatePost
 } from "../../actions/postActionCreator";
 import moment from 'moment';
 import {generateSlug} from "../../utils/utils";
@@ -46,7 +46,7 @@ class AddPost extends Component {
     }
     componentDidMount(){
         this.setState({
-            tag:this.props.post.editPost.tags,
+            tags:this.props.post.editPost.tags,
             content: this.props.post.editPost.content,
             title:this.props.post.editPost.title,
             category:this.props.post.editPost.category,
@@ -59,7 +59,7 @@ class AddPost extends Component {
 
     onContentChange(e) {
         console.log(e);
-        this.setState({content: e.target.value.toString()});
+        this.setState({content: e});
     }
     onPostStateChange(e) {
         this.setState({state:e.target.value});
@@ -77,7 +77,7 @@ class AddPost extends Component {
     onPostSubmit(e) {
         e.preventDefault();
 
-        this.props.addPost({
+        this.props.updatePost({
             title: this.state.title,
             content: this.state.content,
             timestamp: moment().unix(),
@@ -86,13 +86,7 @@ class AddPost extends Component {
             category: this.state.category,
             state: this.state.state
         });
-        this.setState({
-            tag:'',
-            content: null,
-            title:'',
-            category:'',
-            state:''
-        })
+        this.props.history.push('/admin/posts')
 
     }
 
@@ -135,7 +129,7 @@ class AddPost extends Component {
     }
 
     render() {
-        console.log("STATEE: ",this.state.content)
+        console.log("this.props.post.editPost.content: ",this.props.post.editPost.content)
         if (!this.props.user) {
             this.props.history.push('/404');
             return false;
@@ -152,6 +146,7 @@ class AddPost extends Component {
                                value={this.state.title}
                                onChange={this.onTitleChange}/>
                         <FroalaEditor
+                            key={new Date()}
                             config={{
                                 events: {
                                     'froalaEditor.image.beforeUpload': this.uploadImages,
@@ -178,7 +173,7 @@ class AddPost extends Component {
                             <div className="input-group mt-2 mb-4">
                                 <select className="custom-select"
                                         id="inputGroupSelect04"
-                                        value={1}
+                                        value={this.state.state}
                                         onChange={this.onPostStateChange}>
                                     <option value="1">Yayında</option>
                                     <option value="2">Taslak</option>
@@ -186,17 +181,18 @@ class AddPost extends Component {
                                 <div className="input-group-append">
                                     <button className="btn btn-success"
                                             type="submit">
-                                        Paylaş
+                                        Güncelle
                                     </button>
                                 </div>
                             </div>
                             <select className="custom-select"
                                     id="inputGroupSelect04"
-                                    onChange={this.onCategoryChange}>
-                                <option value={this.state.category} >Kategoriler</option>
+                                    onChange={this.onCategoryChange}
+                                    value={this.state.category}>
+                                <option>Kategoriler</option>
                                 {
-                                    this.props.post.editPost.categories && this.props.post.editPost.categories.length > 0 ?
-                                        this.props.post.editPost.categories.map((category) => {
+                                    this.props.post.categories && this.props.post.categories.length > 0 ?
+                                        this.props.post.categories.map((category) => {
                                             return <option
                                                 key={category}
                                                 value={category}>
@@ -223,7 +219,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        addPost,
+        updatePost,
         loadPostData,
         selectCategory,
         removeTag,

@@ -10,9 +10,14 @@ import {
     addPost,
     addTag,
     increaseTagCount,
-    loadPostData, removePostData,
+    loadPostData,
+    removePostData,
     removeTag,
-    selectCategory, selectPostMode, setPostContent, setPostState, setPostTitle
+    selectCategory,
+    selectPostMode,
+    setPostContent,
+    setPostState,
+    setPostTitle
 } from "../../actions/postActionCreator";
 import moment from 'moment';
 import {generateSlug} from "../../utils/utils";
@@ -40,7 +45,6 @@ class AddPost extends Component {
         this.props.loadPostData(this.props.user.uid);
         this.tagInput;
         this.editorInput;
-        this.headerInput;
         this.onAddTagChange = this.onAddTagChange.bind(this);
 
     }
@@ -51,10 +55,11 @@ class AddPost extends Component {
 
     onContentChange(e) {
         console.log(e);
-        this.setState({content: e.target.value.toString()});
+        this.setState({content: e});
     }
+
     onPostStateChange(e) {
-        this.setState({state:e.target.value});
+        this.setState({state: e.target.value});
     }
 
     uploadImages(e, editor, images) {
@@ -71,46 +76,39 @@ class AddPost extends Component {
 
         this.props.addPost({
             title: this.state.title,
-             content: this.state.content,
+            content: this.state.content,
             timestamp: moment().unix(),
-             tags: this.state.tags,
+            tags: this.state.tags,
             slug: generateSlug(this.state.title),
             category: this.state.category,
             state: this.state.state
-         });
-        this.setState({
-            tag:'',
-            content: null,
-            title:'',
-            category:'',
-            state:''
-        })
-
+        });
+        this.props.history.push('/admin/posts')
     }
 
     onCategoryChange(e) {
-        this.setState({category:e.target.value});
+        this.setState({category: e.target.value});
     }
 
     getTags() {
         return this.state.tags.map((tag) => <div className='tag'
-                                                      key={tag.id}
-                                                      tagName={tag.name}
-                                                      onClick={this.removeTag.bind(this, tag)}>
+                                                 key={tag.id}
+                                                 tagName={tag.name}
+                                                 onClick={this.removeTag.bind(this, tag)}>
             {tag.name + ' x'}
-            </div>)
+        </div>)
     }
 
     removeTag(removeTag) {
-      let oldState = this.state.tags;
+        let oldState = this.state.tags;
         let index = oldState.indexOf(removeTag);
         if (index !== -1) oldState.splice(index, 1);
-        this.setState({tags:oldState})
+        this.setState({tags: oldState})
     }
 
     onAddTagChange(event) {
         let value = event.target.value;
-        this.setState({tag:value});
+        this.setState({tag: value});
         if (value[value.length - 1] === ',') {
             let trimmedValue = value.split(',')[0];
             this.props.increaseTagCount();
@@ -120,8 +118,8 @@ class AddPost extends Component {
             };
             let oldState = this.state.tags;
             oldState.push(newValue);
-            this.setState({tags:oldState});
-            this.setState({tag:''});
+            this.setState({tags: oldState});
+            this.setState({tag: ''});
 
         }
     }
@@ -143,6 +141,7 @@ class AddPost extends Component {
                                value={this.state.title}
                                onChange={this.onTitleChange}/>
                         <FroalaEditor
+                            ref={(ref) => this.editorInput = ref}
                             config={{
                                 events: {
                                     'froalaEditor.image.beforeUpload': this.uploadImages,
@@ -184,7 +183,7 @@ class AddPost extends Component {
                             <select className="custom-select"
                                     id="inputGroupSelect04"
                                     onChange={this.onCategoryChange}>
-                                <option value={this.state.category} >Kategoriler</option>
+                                <option value={this.state.category}>Kategoriler</option>
                                 {
                                     this.props.post.categories && this.props.post.categories.length > 0 ?
                                         this.props.post.categories.map((category) => {
