@@ -1,26 +1,44 @@
 import React, {Component} from 'react';
 import Navbar from "../public/Navbar";
-import {login, logout} from "../../actions/userActionCreator";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {addCategory, removeCategory} from "../../actions/postActionCreator";
+import {addCategory, loadPostData, removeCategory} from "../../actions/postActionCreator";
 
 class Categories extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             enableEdit: false,
+            categoryName:''
         };
         this.onCategoryAddPress = this.onCategoryAddPress.bind(this);
         this.onCategorySavePress = this.onCategorySavePress.bind(this);
+        this.onCategoryNameChange = this.onCategoryNameChange.bind(this);
+    }
+
+    componentDidMount(){
+        this.props.loadPostData(this.props.user.uid);
     }
 
     onCategoryAddPress() {
         this.setState({enableEdit: true});
     }
+
     onCategorySavePress(){
-        this.setState({enableEdit: false});
+        this.setState({enableEdit: false,categoryName:''} );
+        this.props.addCategory(this.state.categoryName,this.props.user.uid)
     }
+
+    onCategoryRemovePress(category){
+        this.setState({enableEdit: false});
+        this.props.removeCategory(category,this.props.user.uid)
+
+    }
+
+    onCategoryNameChange(e){
+        this.setState({categoryName:e.target.value})
+    }
+
     render() {
         console.log(this.props)
         return (
@@ -28,15 +46,35 @@ class Categories extends Component {
                 <Navbar/>
             <div className='row mt-2'>
                 <div className='col-12'>
-                    <ul className="list-group">
-                        {
-                            this.props.post.categories ?
-                                Object.keys(this.props.post.categories).map((category) => {
-                                    return <li key={category + new Date()}
-                                               className="list-group-item">{category}</li>
-                                }) : null
-                        }
-                    </ul>
+                    <table className={'ReactTable -striped -highlight mt-2 mb-2'}>
+
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Kategori Adı</th>
+                                <th scope="col"></th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                this.props.post.hasOwnProperty('categories') && this.props.post.categories && this.props.post.categories.length > 0?
+                                    this.props.post.categories.map((category) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{category}</th>
+                                                <td onClick={this.onCategoryRemovePress.bind(this,category)}>sil</td>
+                                            </tr>
+                                        )
+                                    }) : null
+                            }
+
+                            </tbody>
+                        </table>
+                    <tr className="list-group">
+
+                    </tr>
+                    </table>
                 <button className="btn btn-info mt-2 mb-2" onClick={this.onCategoryAddPress}>
                     Kategori Ekle
                 </button>
@@ -46,8 +84,8 @@ class Categories extends Component {
                         <div>
                             <input type="text"
                                className="form-control mt-2 mb-4"
-                               value=""
-                               onChange={this.onTitleChange}/>
+                               value={this.state.categoryName}
+                               onChange={this.onCategoryNameChange}/>
                             <button className="btn btn-success"
                                     type="button"
                                     onClick={this.onCategorySavePress}>Kaydet</button>
@@ -65,13 +103,15 @@ class Categories extends Component {
 function mapStateToProps(state) {
     return {
         post:state.post,
+        user:state.user
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addCategory,
-        removeCategory
+        removeCategory,
+        loadPostData
     }, dispatch)
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);

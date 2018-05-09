@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {getAllPost} from "../../actions/postActionCreator";
+import {getAllPost, setEditPost} from "../../actions/postActionCreator";
 import Navbar from "../public/Navbar";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -14,27 +14,39 @@ class Posts extends Component {
         this.columns = [{
             Header: 'Title',
             accessor: 'title'
-        },{
+        }, {
             Header: 'Kategori',
             accessor: 'category'
-        },{
+        }, {
             Header: 'Kayıt Zamanı',
             id: "timestamp",
             accessor: d => moment.unix(d.timestamp).format("MM/DD/YYYY").toString()
-        },{
+        }, {
             Header: 'Durum',
             id: "state",
             accessor: d => d.state === 1 ? 'Yayında' : 'Taslak'
-        },{
+        }, {
             Header: '',
             id: "slug",
-            accessor: d => <div><Link to={'/admin/posts/' + d.slug}>Düzenle</Link></div>
+            accessor: d => <div onClick={this.redirect.bind(this, d.slug)}>Düzenle</div>
         }]
     }
 
     componentDidMount() {
         this.props.getAllPost(this.props.user.uid);
 
+    }
+
+    redirect(slug) {
+        if(this.props.post.hasOwnProperty('posts') && this.props.post.posts.length > 0){
+        this.props.post.posts.map((post) => {
+            if(slug === post.slug){
+                this.props.setEditPost(post);
+                console.log("setting",post)
+                this.props.history.push('/admin/editpost/'+slug)
+            }
+        })
+        }
     }
 
     render() {
@@ -44,7 +56,7 @@ class Posts extends Component {
                 <div className="row">
                     <div className="col-12">
                         <ReactTable
-                            data={this.props.post.posts}
+                            data={(this.props.post.hasOwnProperty('posts') && this.props.post.posts.length > 0) ? this.props.post.posts : []}
                             columns={this.columns}
                             defaultPageSize={10}
                             className="-striped -highlight mt-2 mb-2"
@@ -65,7 +77,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getAllPost
+        getAllPost,
+        setEditPost
     }, dispatch)
 }
 

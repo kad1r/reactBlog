@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect, Provider} from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {createStore, applyMiddleware} from 'redux';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import thunk from 'redux-thunk';
 import Home from './containers/public/Home';
 import reducers from './reducers';
@@ -12,24 +12,25 @@ import AdminPosts from "./containers/admin/Posts";
 import PostDetail from "./containers/public/PostDetail";
 import Admin from "./containers/admin/Admin";
 import * as firebase from 'firebase';
+import Login from "./containers/admin/Login";
+import Categories from "./containers/admin/Categories";
+import AddPost from "./containers/admin/AddPost";
+import Dashboard from "./containers/admin/Dashboard";
+import EditPost from "./containers/admin/EditPost";
+import {loadState, saveState} from "./localStorage";
 
 import 'jquery';
 import "../style/bootstrap.css";
 import '../style/style.css';
 import 'bootstrap/dist/js/bootstrap';
-import Login from "./containers/admin/Login";
 
-import {loadState, saveState} from "./localStorage";
-import Categories from "./containers/admin/Categories";
-import AddPost from "./containers/admin/AddPost";
-import Dashboard from "./containers/admin/Dashboard";
 
-const Page404 = ()=> {
-  return <h1>hata</h1>
+const Page404 = () => {
+    return <h1>hata</h1>
 };
 
-
-const store = createStore(reducers, loadState(),applyMiddleware(thunk));
+let userId = null;
+const store = createStore(reducers, loadState(), applyMiddleware(thunk));
 
 store.subscribe(() => {
     console.log('State:', store.getState());
@@ -50,8 +51,7 @@ if (!firebase.apps.length) {
 }
 
 ReactDOM.render(
-
-  <Provider store={store}>
+    <Provider store={store}>
         <BrowserRouter>
             <Switch>
                 <Route exact path="/postDetail/:postId/" component={PostDetail}/>
@@ -60,13 +60,28 @@ ReactDOM.render(
                 <Route exact path="/admin" component={Admin}/>
                 <Route exact path="/admin/settings" component={Admin}/>
                 <Route exact path="/admin/addpost" component={AddPost}/>
+                <Route exact path="/admin/editpost/:slug" component={EditPost}/>
                 <Route exact path="/admin/posts" component={AdminPosts}/>
                 <Route exact path="/admin/dashboard" component={Dashboard}/>
                 <Route exact path="/admin/categories" component={Categories}/>
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/" component={Home}/>
-                <Route exact component={Page404} />
+                <Route exact component={Page404}/>
             </Switch>
         </BrowserRouter>
-  </Provider>
-  , document.querySelector('.container'));
+    </Provider>
+    , document.querySelector('.container'));
+
+
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        userId = user.uid;
+        console.log(userId)
+
+
+    } else {
+
+
+    }
+});
+

@@ -1,4 +1,7 @@
 export function generateSlug(title) {
+    if(!title){
+        return 'ERROR';
+    }
     return title.toString().toLowerCase().trim()
         .replace(/\s+/g, '-')           // Replace spaces with -
         .replace(/&/g, '-ve-')

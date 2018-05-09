@@ -25,10 +25,10 @@ export function logout() {
     return function (dispatch) {
         localStorage.removeItem('userState');
         firebase.auth().signOut();
-
         return dispatch({
             type: USER.LOGOUT,
             payload: null
         })
+
     }
 }
