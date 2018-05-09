@@ -11,6 +11,7 @@ export function selectPostMode(mode) {
 }
 
 export function addPost(post) {
+
     return function (dispatch) {
         let userId = firebase.auth().currentUser.uid;
 
@@ -21,8 +22,8 @@ export function addPost(post) {
         //TODO: last change tutup ona göre postu yenilemek yada listener tanımlamak lazım.
 
         return dispatch({
-            type: 'BOOK_SELECTED',
-            payload: ''
+            type: POST.ADD_POST,
+            payload: post
         })
     }
 }

@@ -1,4 +1,5 @@
 export const POST = {
+    ADD_POST:'Add post',
     GET_MORE_POST: 'Get posts',
     GET_ALL_POST: 'Get all posts',
     GET_POST:'Get post',

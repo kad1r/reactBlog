@@ -38,12 +38,14 @@ class Posts extends Component {
     }
 
     redirect(slug) {
+        if(this.props.post.hasOwnProperty('posts') && this.props.post.post.length > 0){
         this.props.post.posts.map((post) => {
             if(slug === post.slug){
                 this.props.setEditPost(post);
                 this.props.history.push('/admin/editpost/'+slug)
             }
         })
+        }
     }
 
     render() {
@@ -53,7 +55,7 @@ class Posts extends Component {
                 <div className="row">
                     <div className="col-12">
                         <ReactTable
-                            data={this.props.post.posts}
+                            data={(this.props.post.hasOwnProperty('posts') && this.props.post.post.length > 0) ? this.props.post.posts : []}
                             columns={this.columns}
                             defaultPageSize={10}
                             className="-striped -highlight mt-2 mb-2"

@@ -18,8 +18,6 @@ import moment from 'moment';
 import {generateSlug} from "../../utils/utils";
 import Navbar from "../public/Navbar";
 import {uploadImage} from "../../firebase/firebase";
-import {POST} from "../../constants/constants";
-import update from "react-addons-update";
 
 class AddPost extends Component {
     constructor(props) {
@@ -27,13 +25,12 @@ class AddPost extends Component {
         this.state = {
             blogPost: 'test',
             content: '',
-            title: '',
+            title: null,
             tags: [],
             category: '',
             state: 1
         };
 
-        this.handleModelChange = this.handleModelChange.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
         this.onPostSubmit = this.onPostSubmit.bind(this);
         this.uploadImages = this.uploadImages.bind(this);
@@ -51,10 +48,6 @@ class AddPost extends Component {
         this.setState({title: e.target.value});
     }
 
-    handleModelChange(content) {
-        this.setState({content:content});
-    }
-
     onPostStateChange(e) {
         this.setState({state:e.target.value});
     }
@@ -70,22 +63,35 @@ class AddPost extends Component {
 
     onPostSubmit(e) {
         e.preventDefault();
-        if (!this.props.post.title || !this.props.post.content || !this.props.post.selectedCategory) {
-            return false;
-        }
+
+
+        console.log({
+                title: this.state.title,
+                content: this.state.content,
+                timestamp: moment().unix(),
+                tags: this.state.tags,
+                slug: generateSlug(this.state.title),
+                category: this.state.category,
+                state: this.state.state
+            });
+
         this.props.addPost({
             title: this.state.title,
-            content: this.state.content,
+             content: this.state.content,
             timestamp: moment().unix(),
-            tags: this.state.tags,
+             tags: this.state.tags,
             slug: generateSlug(this.state.title),
             category: this.state.category,
-            state: 1
-        });
-        this.props.removePostData();
-        this.tagInput.value = '';
-        this.headerInput.value = '';
-        this.setState({content: ''})
+            state: this.state.state
+         });
+        this.setState({
+            tag:'',
+            content: '',
+            title:'',
+            category:'',
+            state:''
+        })
+
     }
 
     onCategoryChange(e) {
@@ -96,7 +102,9 @@ class AddPost extends Component {
         return this.state.tags.map((tag) => <div className='tag'
                                                       key={tag.id}
                                                       tagName={tag.name}
-                                                      onClick={this.removeTag.bind(this, tag)}>{tag.name + ' x'}</div>)
+                                                      onClick={this.removeTag.bind(this, tag)}>
+            {tag.name + ' x'}
+            </div>)
     }
 
     removeTag(removeTag) {
@@ -108,6 +116,7 @@ class AddPost extends Component {
 
     onAddTagChange(event) {
         let value = event.target.value;
+        this.setState({tag:value})
         if (value[value.length - 1] === ',') {
             let trimmedValue = value.split(',')[0];
             this.props.increaseTagCount();
@@ -115,11 +124,11 @@ class AddPost extends Component {
                 name: trimmedValue,
                 id: this.props.post.counter
             };
-            console.log(newValue)
             let oldState = this.state.tags;
             oldState.push(newValue);
             this.setState({tags:oldState})
-            this.tagInput.value = '';
+            this.setState({tag:''})
+
         }
     }
 
@@ -135,7 +144,6 @@ class AddPost extends Component {
                     <div className='col-md-8 col-12'>
 
                         <input type="text"
-                               ref={(ref) => this.headerInput = ref}
                                className="form-control mt-2 mb-4"
                                placeholder="Başlık giriniz"
                                value={this.state.title}
@@ -144,16 +152,16 @@ class AddPost extends Component {
                             config={{
                                 events: {
                                     'froalaEditor.image.beforeUpload': this.uploadImages,
-                                    'froalaEditor.contentChanged': this.handleModelChange,
+                                    'froalaEditor.contentChanged': ''
                                 }
                             }}
                             model={this.state.content}
-                            onModelChange={this.handleModelChange}
                             ref={(ref) => this.editorInput = ref}
                             tag='textarea'/>
                         <div className='mt-2 mb-2'>
                             <input ref={(ref) => this.tagInput = ref}
                                    type="text"
+                                   value={this.state.tag}
                                    className="form-control"
                                    style={{marginTop: 10, marginBottom: 10}}
                                    placeholder="Etiket Giriniz"

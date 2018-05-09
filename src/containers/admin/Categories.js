@@ -58,7 +58,7 @@ class Categories extends Component {
                             </thead>
                             <tbody>
                             {
-                                this.props.post.categories ?
+                                this.props.post.hasOwnProperty('categories') && this.props.post.categories && this.props.post.categories.length > 0?
                                     this.props.post.categories.map((category) => {
                                         return (
                                             <tr>

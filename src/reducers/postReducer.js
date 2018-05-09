@@ -15,6 +15,9 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case POST.ADD_POST: {
+            return update(state, {post: {$push: [action.payload]}});
+        }
         case POST.TAG.ADD: {
             let newValue = action.payload;
             return update(state, {tags: {$push: [newValue]}});
