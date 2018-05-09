@@ -16,7 +16,7 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case POST.ADD_POST: {
-            return update(state, {post: {$push: [action.payload]}});
+            return update(state, {posts: {$push: [action.payload]}});
         }
         case POST.TAG.ADD: {
             let newValue = action.payload;
@@ -70,14 +70,9 @@ export default function (state = initialState, action) {
         case POST.SELECTED_MODE:
             return update(state, {mode: {$set: action.payload}});
         case POST.SET_OLD_POST:
+            console.log('receive reducers',action.payload)
             return update(state,
-                {tags: {$set: action.payload.tags}},
-                {counter: {$set: 0}},
-                {selectedCategory: {$set: action.payload.category}},
-                {title: {$set: action.payload.title}},
-                {state: {$set: action.payload.state}},
-                {content: {$set: action.payload.content}},
-                {key: {$set: action.payload.key}},
+                {editPost: {$set: action.payload}}
             );
         default:
             return state;
