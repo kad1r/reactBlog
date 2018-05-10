@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Post from "../../components/Post";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 
 const POST = [
     {
@@ -39,7 +41,7 @@ class Posts extends Component {
         return (
             <div>
                 {
-                    POST.map((post) => {
+                    this.props.post.posts.map((post) => {
                         return <Post key={post.id}
                                      id={post.slug}
                                      title={post.title}
@@ -51,5 +53,15 @@ class Posts extends Component {
         );
     }
 }
+function mapStateToProps(state) {
+        return {
+            post: state.post
+        }
+}
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
 
-export default Posts;
+    },dispatch)
+}
+
+export default connect (mapStateToProps,mapDispatchToProps)(Posts);
