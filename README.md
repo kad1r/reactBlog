@@ -1,6 +1,19 @@
-# React, Redux, Router and Firebase Blog - mrkacan.com
+# React, Redux, Router and Firebase Blog - React Blog
 
 Demo: www.mrkacan.com
+
+### Features
+
+1. Add Post, Edit Post, Listing Search, Listing Categories
+2. Firebase Authantication
+3. Uploading image to firebase storage
+4. Real time listeners
+5. Redux and using cookie for data
+6. Advanced Text Editor (Responsive)
+7. Include Bootstrap, Font awesome and Jquery effects
+8. Router for search engines
+9. Slug (post/it-is-a-post)
+10. Tags for SEO
 
 ### Getting Started
 
