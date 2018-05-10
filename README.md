@@ -12,9 +12,10 @@ Demo: www.mrkacan.com
 6. Advanced Text Editor (Responsive)
 7. Include Bootstrap, Font awesome and Jquery effects
 8. Router for search engines
-9. Slug (post/it-is-a-post)
-10. Tags for SEO
-11. Clear codes
+9. Webpack for easy build and publish your server
+10. Slug (post/it-is-a-post)
+11. Tags for SEO
+12. Clear codes
 
 ### Getting Started
 
