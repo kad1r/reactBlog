@@ -16,6 +16,7 @@ Demo: www.mrkacan.com
 10. Slug (post/it-is-a-post)
 11. Tags for SEO
 12. Clear codes
+13. Customer support (1 year)
 
 ### Getting Started
 
