@@ -14,6 +14,7 @@ Demo: www.mrkacan.com
 8. Router for search engines
 9. Slug (post/it-is-a-post)
 10. Tags for SEO
+11. Clear codes
 
 ### Getting Started
 
