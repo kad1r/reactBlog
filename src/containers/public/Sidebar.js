@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
 
 class Sidebar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            findedPosts:[],
+            searchQuery: '',
+        };
+        this.onSearchTextChange = this.onSearchTextChange.bind(this);
+        this.onSearchPress = this.onSearchPress.bind(this);
+    }
+
     render() {
         return (
-            <div className='mt-4 mb-4'>
-                Sidebar
-            </div>
+<div>test</div>
         );
     }
 }

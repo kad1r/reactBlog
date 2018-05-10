@@ -24,6 +24,7 @@ import "../style/bootstrap.css";
 import '../style/style.css';
 import 'bootstrap/dist/js/bootstrap';
 import Search from "./containers/public/Search";
+import Category from "./containers/public/Category";
 
 
 const Page404 = () => {
@@ -67,6 +68,7 @@ ReactDOM.render(
                 <Route exact path="/admin/categories" component={Categories}/>
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/search/:searchQuery" component={Search}/>
+                <Route exact path="/category/:categoryQuery" component={Category}/>
                 <Route exact path="/" component={Home}/>
                 <Route exact component={Page404}/>
             </Switch>

@@ -1,44 +1,30 @@
 import React, {Component} from 'react';
-import 'froala-editor/js/froala_editor.pkgd.min.js';
-import 'froala-editor/css/froala_style.min.css';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'font-awesome/css/font-awesome.css';
-import FroalaEditor from 'react-froala-wysiwyg';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import Post from "../../components/Post";
 import Navbar from "./Navbar";
 
-class AddPost extends Component {
+class Category extends Component {
     constructor(props) {
         super(props);
         this.state = {
             findedPosts:[],
-            searchQuery: this.props.match.params.searchQuery.toLowerCase(),
+            searchQuery: decodeURIComponent(this.props.match.params.categoryQuery),
         };
-        this.onSearchTextChange = this.onSearchTextChange.bind(this);
+        console.log('category', this)
     }
 
     componentDidMount(){
-        this.getResult(this.props.match.params.searchQuery.toLowerCase())
+        this.getResult(decodeURIComponent(this.props.match.params.categoryQuery))
     }
 
-    onSearchTextChange(e){
-        this.setState({searchQuery:e.target.value});
-        this.getResult(e.target.value)
-    }
 
-    getResult(searchQuery) {
+    getResult(categoryQuery) {
         let finded = [];
         this.props.post.posts.map((post) => {
-            if (post.content) {
-                console.log(post.content.toLowerCase().search(searchQuery))
-                if (post.content.search(searchQuery) > -1) {
+            if (post.category) {
+                if (post.category.search(categoryQuery) > -1) {
                     finded.push(post);
-                } else {
-                    if (post.title.toLowerCase().search(searchQuery) > -1) {
-                        finded.push(post);
-                    }
                 }
 
             }
@@ -46,15 +32,23 @@ class AddPost extends Component {
         this.setState({findedPosts:finded})
     }
 
+    getDerivedStateFromProps(nextProps, prevState){
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.match.params.categoryQuery !== nextProps.match.params.categoryQuery){
+            this.getResult(decodeURIComponent(nextProps.match.params.categoryQuery))
+        }
+
+        return true;
+    }
+
     render() {
+        console.log( decodeURIComponent(this.props.match.params.categoryQuery.toLowerCase()))
         return (
             <div>
                 <Navbar/>
-                <input type="text"
-                       className="form-control mt-2 mb-4"
-                       placeholder="Arama yapın..."
-                       value={this.state.searchQuery}
-                       onChange={this.onSearchTextChange}/>
+
                 {
                     <div>
                         {
@@ -82,9 +76,11 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch)
+    return bindActionCreators({
+
+    }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddPost);
+export default connect(mapStateToProps, mapDispatchToProps)(Category);
 
 

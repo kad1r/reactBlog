@@ -42,7 +42,7 @@ class Posts extends Component {
             <div>
                 {
                     this.props.post.posts.map((post) => {
-                        return <Post key={post.id}
+                        return <Post key={post.key}
                                      id={post.slug}
                                      title={post.title}
                                      content={post.content}
