@@ -31,4 +31,4 @@ This is example for React, Redux, Router and Firebase.
 
 ### Project Plans
 
-![alt text](https://github.com/mrkacan/mrkacancom/blob/master/PlanImages/Blank%20Diagram%20-%20Page%201.png)
+![alt text](https://github.com/mrkacan/reactBlog/blob/master/PlanImages/Blank%20Diagram%20-%20Page%201.png)

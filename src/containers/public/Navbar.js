@@ -50,8 +50,8 @@ class Navbar extends Component {
 
     getMenu() {
         let menu;
-        menuDATA.map((item)=>{
-            if(item.hasOwnProperty('subItems')){
+        menuDATA.map((item) => {
+            if (item.hasOwnProperty('subItems')) {
 
             }
         })
@@ -62,8 +62,12 @@ class Navbar extends Component {
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container">
                     <Link className="navbar-brand" to="/">Ana Sayfa</Link>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false"
+                    <button className="navbar-toggler"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#navbarsExample07"
+                            aria-controls="navbarsExample07"
+                            aria-expanded="false"
                             aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -78,15 +82,43 @@ class Navbar extends Component {
 
 
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="http://example.com" id="dropdown07"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kategoriler</a>
-                                <div className="dropdown-menu" aria-labelledby="dropdown07">
+                                <a className="nav-link dropdown-toggle"
+                                   href="http://example.com"
+                                   id="dropdown07"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    Kategoriler
+                                </a>
+                                <div className="dropdown-menu"
+                                     aria-labelledby="dropdown07">
                                     {
                                         this.props.post.categories.map((category) => {
                                             return <Link key={category}
                                                          className="dropdown-item"
                                                          to={"/category/" + category}>{category}</Link>
                                         })
+                                    }
+
+                                </div>
+                            </li>
+                            : null
+                            }
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle"
+                                   href="http://example.com"
+                                   id="dropdown07"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">Kategoriler</a>
+                                <div className="dropdown-menu"
+                                     aria-labelledby="dropdown07">
+                                    {
+                                        this.props.post.hasOwnProperty('categories') && this.props.post.categories.length > 0 ? this.props.post.categories.map((category) => {
+                                            return <Link key={category}
+                                                         className="dropdown-item"
+                                                         to={"/category/" + category}>{category}</Link>
+                                        }) : null
                                     }
 
 
@@ -98,16 +130,34 @@ class Navbar extends Component {
                             {
                                 this.props.user ?
                                     <li className="nav-item dropdown">
-                                        <a className="nav-link dropdown-toggle" href="http://example.com"
+                                        <a className="nav-link dropdown-toggle"
+                                           href="http://example.com"
                                            id="dropdown07"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">User</a>
-                                        <div className="dropdown-menu" aria-labelledby="dropdown07">
+                                           data-toggle="dropdown"
+                                           aria-haspopup="true"
+                                           aria-expanded="false">
+                                            User
+                                        </a>
+                                        <div className="dropdown-menu"
+                                             aria-labelledby="dropdown07">
 
-                                            <Link className="dropdown-item" to="/admin/posts">Yazılar</Link>
-                                            <Link className="dropdown-item" to="/admin/addpost">Yazı Ekle</Link>
-                                            <Link className="dropdown-item" to="/admin/categories">Kategori Ekle</Link>
-                                            <Link className="dropdown-item" onClick={() => this.props.logout()} to="/">Çıkış
-                                                Yap</Link>
+                                            <Link className="dropdown-item"
+                                                  to="/admin/posts">
+                                                Yazılar
+                                            </Link>
+                                            <Link className="dropdown-item"
+                                                  to="/admin/addpost">
+                                                Yazı Ekle
+                                            </Link>
+                                            <Link className="dropdown-item"
+                                                  to="/admin/categories">
+                                                Kategori Ekle
+                                            </Link>
+                                            <Link className="dropdown-item"
+                                                  onClick={() => this.props.logout()}
+                                                  to="/">
+                                                Çıkış Yap
+                                            </Link>
 
 
                                         </div>
