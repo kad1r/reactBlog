@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Posts from "./Posts";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Post from "../../components/Post";
@@ -34,7 +33,9 @@ class Home extends Component {
     }
 
     onSearchPress(){
-        console.log("secrh")
+        if(!this.state.searchQuery){
+        }
+
         this.props.history.push('/search/' + this.state.searchQuery)
     }
     render() {
@@ -66,9 +67,6 @@ class Home extends Component {
                             </div>
 
                             <Pagination items={this.state.data} onChangePage={this.onChangePage} />
-
-
-
 
 
                         </div>

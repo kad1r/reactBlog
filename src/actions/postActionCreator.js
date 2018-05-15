@@ -31,7 +31,6 @@ export function addPost(post) {
 export function updatePost(post) {
     return function (dispatch) {
         let userId = firebase.auth().currentUser.uid;
-        console.log(post)
         firebase.database().ref(userId + '/posts/'+post.key).update(post);
 
         return dispatch({
@@ -61,7 +60,6 @@ export function addTag(tag) {
 
 export function removeTag(tag) {
     return function (dispatch) {
-        console.log('remove tag')
         return dispatch({
             type: POST.TAG.REMOVE,
             payload: tag
@@ -81,16 +79,15 @@ export function increaseTagCount() {
 
 //CATEGORY DATA
 //TODO: isim değişmeli
-export function loadPostData(userId) {
+export function loadPostData() {
     return function (dispatch) {
-        firebase.database().ref(userId + '/categories/').on("value", function (snapshot) {
+        firebase.database().ref('/categories/').on("value", function (snapshot) {
             let arrayCategories = [];
 
             if(snapshot.val()){
                 let categories = snapshot.val();
 
                 Object.keys(categories).map((key)=> {
-                    console.log(key)
                     arrayCategories.push(key);
                 });
             }
@@ -99,7 +96,6 @@ export function loadPostData(userId) {
                 type: POST.LOAD_DATA,
                 payload: arrayCategories
             })
-
         });
     }
 }
@@ -149,9 +145,9 @@ export function removePostData() {
     }
 }
 
-export function addCategory(category,userId) {
+export function addCategory(category) {
     return function (dispatch) {
-        firebase.database().ref(userId + '/categories/').update({[category]:true});
+        firebase.database().ref('/categories/').update({[category]:true});
         return dispatch({
             type: POST.ADD_CATEGORY,
             payload: category
@@ -159,29 +155,13 @@ export function addCategory(category,userId) {
     }
 }
 
-export function removeCategory(category,userId) {
+export function removeCategory(category) {
     return function (dispatch) {
-        firebase.database().ref(userId + '/categories/').update({[category]:null});
+        firebase.database().ref('/categories/').update({[category]:null});
         return dispatch({
             type: POST.REMOVE_CATEGORY,
             payload: category
         })
-    }
-}
-
-export function getPost(postId,userId) {
-    return function (dispatch) {
-        let post = null;
-        return firebase.database().ref(userId + '/posts' + postId).once('value').then((snapshot) => {
-            post = snapshot.val();
-
-            return dispatch({
-                type: POST.GET_POST,
-                payload: post
-            })
-        }).catch((err) => {
-            throw err;
-        });
     }
 }
 

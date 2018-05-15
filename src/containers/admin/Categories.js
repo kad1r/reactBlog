@@ -3,7 +3,6 @@ import Navbar from "../public/Navbar";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {addCategory, loadPostData, removeCategory} from "../../actions/postActionCreator";
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
 class Categories extends Component {
     constructor(props) {
@@ -32,7 +31,7 @@ class Categories extends Component {
 
     onCategoryRemovePress(category){
         this.setState({enableEdit: false});
-        this.props.removeCategory(category,this.props.user.uid)
+        this.props.removeCategory(category)
 
     }
 
@@ -41,7 +40,6 @@ class Categories extends Component {
     }
 
     render() {
-        console.log(this.props)
         return (
             <div>
                 <Navbar/>
