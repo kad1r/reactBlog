@@ -19,7 +19,7 @@ Demo: www.mrkacan.com
 13. Customer support (1 year)
 
 ### Getting Started
-
+x
 This is example for React, Redux, Router and Firebase.
 
 ```

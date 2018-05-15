@@ -3,6 +3,7 @@ import Navbar from "../public/Navbar";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {addCategory, loadPostData, removeCategory} from "../../actions/postActionCreator";
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
 class Categories extends Component {
     constructor(props) {
@@ -59,9 +60,9 @@ class Categories extends Component {
                             <tbody>
                             {
                                 this.props.post.hasOwnProperty('categories') && this.props.post.categories && this.props.post.categories.length > 0?
-                                    this.props.post.categories.map((category) => {
+                                    this.props.post.categories.map((category,index) => {
                                         return (
-                                            <tr>
+                                            <tr key={'item'+index}>
                                                 <th scope="row">{category}</th>
                                                 <td onClick={this.onCategoryRemovePress.bind(this,category)}>sil</td>
                                             </tr>
